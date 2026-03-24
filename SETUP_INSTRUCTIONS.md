@@ -7,21 +7,13 @@ This guide will help you run the GramSeva application in Databricks without erro
 ### Prerequisites
 ✅ Databricks workspace (Community Edition works)
 ✅ Gemini API key from [Google AI Studio](https://aistudio.google.com)
-✅ Updated dataset: `updated_data.csv`
+✅ Internet connection for Kaggle dataset download
 
 ---
 
 ## 📋 Step-by-Step Setup
 
-### Step 1: Upload Dataset
-1. **Download the dataset** `updated_data.csv` (3,400+ government schemes)
-2. **In Databricks**:
-   - Go to **Data** → **Create Table** → **Upload File**
-   - Choose **Browse** and select `updated_data.csv`
-   - Set destination path: `/FileStore/gramseva/updated_data.csv`
-   - Click **Upload**
-
-### Step 2: Setup Gemini API Key (CRITICAL - Security Fix)
+### Step 1: Setup Gemini API Key (CRITICAL - Security Fix)
 **Choose ONE of these methods:**
 
 #### Method A: Databricks Secrets (Recommended)
@@ -36,10 +28,10 @@ dbutils.secrets.put(scope="gramseva", key="gemini_api_key", value="YOUR_API_KEY_
 GEMINI_API_KEY=your_actual_api_key_here
 ```
 
-### Step 3: Run Notebooks in Order
+### Step 2: Run Notebooks in Order
 Execute these notebooks **sequentially**:
 
-1. **`gramseva_01_setup.py`** - Load CSV → Delta Lake tables
+1. **`gramseva_01_setup.py`** - Auto-download dataset from Kaggle → Delta Lake tables
 2. **`gramseva_02_embeddings.py`** - Generate text embeddings
 3. **`gramseva_03_rag.py`** - Test RAG pipeline (optional)
 4. **`gramseva_04_ui.py`** - Launch Gradio web interface
@@ -57,6 +49,7 @@ Execute these notebooks **sequentially**:
 - ✅ **After**: Proper error handling and validation
 
 ### 📝 Code Quality Improvements:
+- ✅ **Automated Kaggle dataset download** - no manual CSV upload needed
 - ✅ Consistent file naming (`gramseva_01_*.py`)
 - ✅ Better error messages and troubleshooting
 - ✅ Proper library installation with restarts
@@ -84,8 +77,8 @@ After completing setup:
 **❌ "gramseva_schemes table not found"**
 - **Solution**: Run `gramseva_01_setup.py` first
 
-**❌ "CSV file not found in DBFS"**
-- **Solution**: Upload `updated_data.csv` to `/FileStore/gramseva/`
+**❌ "Dataset download failed" or "No CSV file found"**
+- **Solution**: Check internet connection and Kaggle access; dataset auto-downloads from Kaggle
 
 **❌ "API key not found"**
 - **Solution**: Set up Gemini API key using secrets or environment variable
